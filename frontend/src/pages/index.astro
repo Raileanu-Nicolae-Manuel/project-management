@@ -1,0 +1,44 @@
+---
+
+import AsyncButton from '@/components/solid/async-button';
+import CardDemo from '@/components/solid/card';
+import { Button } from '@/components/ui/button';
+import Layout from '@layouts/root.astro';
+import Users from '@/api/users/index'
+import type { User } from '@/types/users';
+const users = new Users("http://localhost:3000/api/v1", new Headers(
+    {
+      "Content-Type": "application/json"
+    }
+  ))
+  const name = "John Doe"
+  const handlePatch = async () => {
+    await users.patchUsers({name: name})
+  }
+
+//TODO: page for testing form moment
+---
+<script define:vars={{ users }}>
+</script>
+
+<Layout>
+  <div class="flex flex-col items-center justify-center h-full gap-4">
+    <Button>
+      Click me
+    </Button>
+    <CardDemo client:load />
+    {name}
+    <AsyncButton 
+      client:load 
+      onClick={handlePatch}>
+      Patch
+    </AsyncButton>
+    <AsyncButton 
+      key={"get"}
+      client:load 
+      onClick={() => users.getUsers()}>
+      Get
+    </AsyncButton>
+  </div>
+</Layout>
+

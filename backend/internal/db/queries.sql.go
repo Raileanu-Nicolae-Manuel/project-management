@@ -10,6 +10,20 @@ import (
 	"database/sql"
 )
 
+const assignUserType = `-- name: AssignUserType :exec
+INSERT INTO user_type_assignments (user_id, user_type_id) VALUES (?, ?)
+`
+
+type AssignUserTypeParams struct {
+	UserID     sql.NullInt32 `json:"user_id"`
+	UserTypeID sql.NullInt32 `json:"user_type_id"`
+}
+
+func (q *Queries) AssignUserType(ctx context.Context, arg AssignUserTypeParams) error {
+	_, err := q.exec(ctx, q.assignUserTypeStmt, assignUserType, arg.UserID, arg.UserTypeID)
+	return err
+}
+
 const createUser = `-- name: CreateUser :execresult
 INSERT INTO users (
     username, email, password_hash
@@ -28,6 +42,19 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (sql.Res
 	return q.exec(ctx, q.createUserStmt, createUser, arg.Username, arg.Email, arg.PasswordHash)
 }
 
+const createUserType = `-- name: CreateUserType :execresult
+INSERT INTO user_types (name, description) VALUES (?, ?)
+`
+
+type CreateUserTypeParams struct {
+	Name        string         `json:"name"`
+	Description sql.NullString `json:"description"`
+}
+
+func (q *Queries) CreateUserType(ctx context.Context, arg CreateUserTypeParams) (sql.Result, error) {
+	return q.exec(ctx, q.createUserTypeStmt, createUserType, arg.Name, arg.Description)
+}
+
 const deleteUser = `-- name: DeleteUser :exec
 DELETE FROM users
 WHERE id = ?
@@ -35,6 +62,15 @@ WHERE id = ?
 
 func (q *Queries) DeleteUser(ctx context.Context, id int64) error {
 	_, err := q.exec(ctx, q.deleteUserStmt, deleteUser, id)
+	return err
+}
+
+const deleteUserType = `-- name: DeleteUserType :exec
+DELETE FROM user_types WHERE id = ?
+`
+
+func (q *Queries) DeleteUserType(ctx context.Context, id int32) error {
+	_, err := q.exec(ctx, q.deleteUserTypeStmt, deleteUserType, id)
 	return err
 }
 
@@ -55,6 +91,92 @@ func (q *Queries) GetUser(ctx context.Context, id int64) (User, error) {
 		&i.UpdatedAt,
 	)
 	return i, err
+}
+
+const getUserType = `-- name: GetUserType :one
+SELECT id, name, description, created_at, updated_at FROM user_types WHERE id = ?
+`
+
+func (q *Queries) GetUserType(ctx context.Context, id int32) (UserType, error) {
+	row := q.queryRow(ctx, q.getUserTypeStmt, getUserType, id)
+	var i UserType
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.Description,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
+const getUserTypes = `-- name: GetUserTypes :many
+SELECT ut.id, ut.name, ut.description, ut.created_at, ut.updated_at 
+FROM user_types ut
+JOIN user_type_assignments uta ON ut.id = uta.user_type_id
+WHERE uta.user_id = ?
+`
+
+func (q *Queries) GetUserTypes(ctx context.Context, userID sql.NullInt32) ([]UserType, error) {
+	rows, err := q.query(ctx, q.getUserTypesStmt, getUserTypes, userID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []UserType
+	for rows.Next() {
+		var i UserType
+		if err := rows.Scan(
+			&i.ID,
+			&i.Name,
+			&i.Description,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const listUserTypes = `-- name: ListUserTypes :many
+SELECT id, name, description, created_at, updated_at FROM user_types
+`
+
+func (q *Queries) ListUserTypes(ctx context.Context) ([]UserType, error) {
+	rows, err := q.query(ctx, q.listUserTypesStmt, listUserTypes)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []UserType
+	for rows.Next() {
+		var i UserType
+		if err := rows.Scan(
+			&i.ID,
+			&i.Name,
+			&i.Description,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }
 
 const listUsers = `-- name: ListUsers :many
@@ -92,6 +214,20 @@ func (q *Queries) ListUsers(ctx context.Context) ([]User, error) {
 	return items, nil
 }
 
+const removeUserType = `-- name: RemoveUserType :exec
+DELETE FROM user_type_assignments WHERE user_id = ? AND user_type_id = ?
+`
+
+type RemoveUserTypeParams struct {
+	UserID     sql.NullInt32 `json:"user_id"`
+	UserTypeID sql.NullInt32 `json:"user_type_id"`
+}
+
+func (q *Queries) RemoveUserType(ctx context.Context, arg RemoveUserTypeParams) error {
+	_, err := q.exec(ctx, q.removeUserTypeStmt, removeUserType, arg.UserID, arg.UserTypeID)
+	return err
+}
+
 const updateUser = `-- name: UpdateUser :exec
 UPDATE users
 SET username = ?, email = ?
@@ -106,5 +242,20 @@ type UpdateUserParams struct {
 
 func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) error {
 	_, err := q.exec(ctx, q.updateUserStmt, updateUser, arg.Username, arg.Email, arg.ID)
+	return err
+}
+
+const updateUserType = `-- name: UpdateUserType :exec
+UPDATE user_types SET name = ?, description = ? WHERE id = ?
+`
+
+type UpdateUserTypeParams struct {
+	Name        string         `json:"name"`
+	Description sql.NullString `json:"description"`
+	ID          int32          `json:"id"`
+}
+
+func (q *Queries) UpdateUserType(ctx context.Context, arg UpdateUserTypeParams) error {
+	_, err := q.exec(ctx, q.updateUserTypeStmt, updateUserType, arg.Name, arg.Description, arg.ID)
 	return err
 }

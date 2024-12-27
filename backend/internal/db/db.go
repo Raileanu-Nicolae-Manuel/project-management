@@ -24,29 +24,63 @@ func New(db DBTX) *Queries {
 func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	q := Queries{db: db}
 	var err error
+	if q.assignUserTypeStmt, err = db.PrepareContext(ctx, assignUserType); err != nil {
+		return nil, fmt.Errorf("error preparing query AssignUserType: %w", err)
+	}
 	if q.createUserStmt, err = db.PrepareContext(ctx, createUser); err != nil {
 		return nil, fmt.Errorf("error preparing query CreateUser: %w", err)
+	}
+	if q.createUserTypeStmt, err = db.PrepareContext(ctx, createUserType); err != nil {
+		return nil, fmt.Errorf("error preparing query CreateUserType: %w", err)
 	}
 	if q.deleteUserStmt, err = db.PrepareContext(ctx, deleteUser); err != nil {
 		return nil, fmt.Errorf("error preparing query DeleteUser: %w", err)
 	}
+	if q.deleteUserTypeStmt, err = db.PrepareContext(ctx, deleteUserType); err != nil {
+		return nil, fmt.Errorf("error preparing query DeleteUserType: %w", err)
+	}
 	if q.getUserStmt, err = db.PrepareContext(ctx, getUser); err != nil {
 		return nil, fmt.Errorf("error preparing query GetUser: %w", err)
+	}
+	if q.getUserTypeStmt, err = db.PrepareContext(ctx, getUserType); err != nil {
+		return nil, fmt.Errorf("error preparing query GetUserType: %w", err)
+	}
+	if q.getUserTypesStmt, err = db.PrepareContext(ctx, getUserTypes); err != nil {
+		return nil, fmt.Errorf("error preparing query GetUserTypes: %w", err)
+	}
+	if q.listUserTypesStmt, err = db.PrepareContext(ctx, listUserTypes); err != nil {
+		return nil, fmt.Errorf("error preparing query ListUserTypes: %w", err)
 	}
 	if q.listUsersStmt, err = db.PrepareContext(ctx, listUsers); err != nil {
 		return nil, fmt.Errorf("error preparing query ListUsers: %w", err)
 	}
+	if q.removeUserTypeStmt, err = db.PrepareContext(ctx, removeUserType); err != nil {
+		return nil, fmt.Errorf("error preparing query RemoveUserType: %w", err)
+	}
 	if q.updateUserStmt, err = db.PrepareContext(ctx, updateUser); err != nil {
 		return nil, fmt.Errorf("error preparing query UpdateUser: %w", err)
+	}
+	if q.updateUserTypeStmt, err = db.PrepareContext(ctx, updateUserType); err != nil {
+		return nil, fmt.Errorf("error preparing query UpdateUserType: %w", err)
 	}
 	return &q, nil
 }
 
 func (q *Queries) Close() error {
 	var err error
+	if q.assignUserTypeStmt != nil {
+		if cerr := q.assignUserTypeStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing assignUserTypeStmt: %w", cerr)
+		}
+	}
 	if q.createUserStmt != nil {
 		if cerr := q.createUserStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing createUserStmt: %w", cerr)
+		}
+	}
+	if q.createUserTypeStmt != nil {
+		if cerr := q.createUserTypeStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing createUserTypeStmt: %w", cerr)
 		}
 	}
 	if q.deleteUserStmt != nil {
@@ -54,9 +88,29 @@ func (q *Queries) Close() error {
 			err = fmt.Errorf("error closing deleteUserStmt: %w", cerr)
 		}
 	}
+	if q.deleteUserTypeStmt != nil {
+		if cerr := q.deleteUserTypeStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing deleteUserTypeStmt: %w", cerr)
+		}
+	}
 	if q.getUserStmt != nil {
 		if cerr := q.getUserStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing getUserStmt: %w", cerr)
+		}
+	}
+	if q.getUserTypeStmt != nil {
+		if cerr := q.getUserTypeStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing getUserTypeStmt: %w", cerr)
+		}
+	}
+	if q.getUserTypesStmt != nil {
+		if cerr := q.getUserTypesStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing getUserTypesStmt: %w", cerr)
+		}
+	}
+	if q.listUserTypesStmt != nil {
+		if cerr := q.listUserTypesStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing listUserTypesStmt: %w", cerr)
 		}
 	}
 	if q.listUsersStmt != nil {
@@ -64,9 +118,19 @@ func (q *Queries) Close() error {
 			err = fmt.Errorf("error closing listUsersStmt: %w", cerr)
 		}
 	}
+	if q.removeUserTypeStmt != nil {
+		if cerr := q.removeUserTypeStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing removeUserTypeStmt: %w", cerr)
+		}
+	}
 	if q.updateUserStmt != nil {
 		if cerr := q.updateUserStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing updateUserStmt: %w", cerr)
+		}
+	}
+	if q.updateUserTypeStmt != nil {
+		if cerr := q.updateUserTypeStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing updateUserTypeStmt: %w", cerr)
 		}
 	}
 	return err
@@ -106,23 +170,39 @@ func (q *Queries) queryRow(ctx context.Context, stmt *sql.Stmt, query string, ar
 }
 
 type Queries struct {
-	db             DBTX
-	tx             *sql.Tx
-	createUserStmt *sql.Stmt
-	deleteUserStmt *sql.Stmt
-	getUserStmt    *sql.Stmt
-	listUsersStmt  *sql.Stmt
-	updateUserStmt *sql.Stmt
+	db                 DBTX
+	tx                 *sql.Tx
+	assignUserTypeStmt *sql.Stmt
+	createUserStmt     *sql.Stmt
+	createUserTypeStmt *sql.Stmt
+	deleteUserStmt     *sql.Stmt
+	deleteUserTypeStmt *sql.Stmt
+	getUserStmt        *sql.Stmt
+	getUserTypeStmt    *sql.Stmt
+	getUserTypesStmt   *sql.Stmt
+	listUserTypesStmt  *sql.Stmt
+	listUsersStmt      *sql.Stmt
+	removeUserTypeStmt *sql.Stmt
+	updateUserStmt     *sql.Stmt
+	updateUserTypeStmt *sql.Stmt
 }
 
 func (q *Queries) WithTx(tx *sql.Tx) *Queries {
 	return &Queries{
-		db:             tx,
-		tx:             tx,
-		createUserStmt: q.createUserStmt,
-		deleteUserStmt: q.deleteUserStmt,
-		getUserStmt:    q.getUserStmt,
-		listUsersStmt:  q.listUsersStmt,
-		updateUserStmt: q.updateUserStmt,
+		db:                 tx,
+		tx:                 tx,
+		assignUserTypeStmt: q.assignUserTypeStmt,
+		createUserStmt:     q.createUserStmt,
+		createUserTypeStmt: q.createUserTypeStmt,
+		deleteUserStmt:     q.deleteUserStmt,
+		deleteUserTypeStmt: q.deleteUserTypeStmt,
+		getUserStmt:        q.getUserStmt,
+		getUserTypeStmt:    q.getUserTypeStmt,
+		getUserTypesStmt:   q.getUserTypesStmt,
+		listUserTypesStmt:  q.listUserTypesStmt,
+		listUsersStmt:      q.listUsersStmt,
+		removeUserTypeStmt: q.removeUserTypeStmt,
+		updateUserStmt:     q.updateUserStmt,
+		updateUserTypeStmt: q.updateUserTypeStmt,
 	}
 }

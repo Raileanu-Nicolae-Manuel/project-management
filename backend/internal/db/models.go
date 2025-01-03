@@ -8,25 +8,47 @@ import (
 	"database/sql"
 )
 
+type Project struct {
+	ID          int64
+	Name        string
+	Description sql.NullString
+	CreatedAt   sql.NullTime
+	UpdatedAt   sql.NullTime
+}
+
+type ProjectRole struct {
+	ID          int64
+	Name        string
+	Description sql.NullString
+	CreatedAt   sql.NullTime
+}
+
 type User struct {
-	ID           int64        `json:"id"`
-	Username     string       `json:"username"`
-	Email        string       `json:"email"`
-	PasswordHash string       `json:"password_hash"`
-	CreatedAt    sql.NullTime `json:"created_at"`
-	UpdatedAt    sql.NullTime `json:"updated_at"`
+	ID           int64
+	Username     string
+	Email        string
+	PasswordHash string
+	CreatedAt    sql.NullTime
+	UpdatedAt    sql.NullTime
 }
 
-type UserType struct {
-	ID          int32          `json:"id"`
-	Name        string         `json:"name"`
-	Description sql.NullString `json:"description"`
-	CreatedAt   sql.NullTime   `json:"created_at"`
-	UpdatedAt   sql.NullTime   `json:"updated_at"`
+type UserProject struct {
+	UserID    int64
+	ProjectID int64
+	CreatedAt sql.NullTime
+	RoleID    int64
 }
 
-type UserTypeAssignment struct {
-	UserID     sql.NullInt32 `json:"user_id"`
-	UserTypeID sql.NullInt32 `json:"user_type_id"`
-	CreatedAt  sql.NullTime  `json:"created_at"`
+type UserRole struct {
+	ID          int32
+	Name        string
+	Description sql.NullString
+	CreatedAt   sql.NullTime
+	UpdatedAt   sql.NullTime
+}
+
+type UserRoleAssignment struct {
+	UserID    sql.NullInt64
+	RoleID    sql.NullInt32
+	CreatedAt sql.NullTime
 }

@@ -10,19 +10,24 @@ import (
 )
 
 type Querier interface {
-	AssignUserType(ctx context.Context, arg AssignUserTypeParams) error
+	AddUserToProject(ctx context.Context, arg AddUserToProjectParams) error
+	CreateProject(ctx context.Context, arg CreateProjectParams) (sql.Result, error)
 	CreateUser(ctx context.Context, arg CreateUserParams) (sql.Result, error)
-	CreateUserType(ctx context.Context, arg CreateUserTypeParams) (sql.Result, error)
+	DeleteProject(ctx context.Context, id int64) error
 	DeleteUser(ctx context.Context, id int64) error
-	DeleteUserType(ctx context.Context, id int32) error
+	GetProject(ctx context.Context, id int64) (Project, error)
+	GetProjectRole(ctx context.Context, id int64) (ProjectRole, error)
+	GetProjectRoleByName(ctx context.Context, name string) (ProjectRole, error)
+	GetProjectUsers(ctx context.Context, projectID int64) ([]GetProjectUsersRow, error)
 	GetUser(ctx context.Context, id int64) (User, error)
-	GetUserType(ctx context.Context, id int32) (UserType, error)
-	GetUserTypes(ctx context.Context, userID sql.NullInt32) ([]UserType, error)
-	ListUserTypes(ctx context.Context) ([]UserType, error)
+	GetUserProjects(ctx context.Context, userID int64) ([]GetUserProjectsRow, error)
+	ListProjectRoles(ctx context.Context) ([]ProjectRole, error)
+	ListProjects(ctx context.Context) ([]Project, error)
 	ListUsers(ctx context.Context) ([]User, error)
-	RemoveUserType(ctx context.Context, arg RemoveUserTypeParams) error
+	RemoveUserFromProject(ctx context.Context, arg RemoveUserFromProjectParams) error
+	UpdateProject(ctx context.Context, arg UpdateProjectParams) error
 	UpdateUser(ctx context.Context, arg UpdateUserParams) error
-	UpdateUserType(ctx context.Context, arg UpdateUserTypeParams) error
+	UpdateUserProjectRole(ctx context.Context, arg UpdateUserProjectRoleParams) error
 }
 
 var _ Querier = (*Queries)(nil)

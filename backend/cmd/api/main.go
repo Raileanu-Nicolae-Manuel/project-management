@@ -10,11 +10,22 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/joho/godotenv"
 )
 
 func main() {
-	// Database connection
-	db, err := sql.Open("mysql", "myapp:myapppassword@tcp(localhost:3306)/myapp?parseTime=true")
+	// Load .env file
+	if err := godotenv.Load(); err != nil {
+		log.Printf("Warning: .env file not found")
+	}
+
+	// Database connection using environment variable
+	dbURL := os.Getenv("DATABASE_URL")
+	if dbURL == "" {
+		log.Fatal("DATABASE_URL environment variable is not set")
+	}
+
+	db, err := sql.Open("mysql", dbURL)
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<script src="./../app.css"></script>
+		<title>Astro</title>
+	</head>
+	<body class="dark bg-background text-foreground">
+		<slot />
+	</body>
+</html>
+
+<script>
+	// Check if user is logged in
+	const checkAuth = async () => {
+		try {
+			const response = await fetch('/api/auth/check', {
+				credentials: 'include' // Important for cookies
+			});
+			
+			if (!response.ok) {
+				// If not logged in and not already on login page, redirect to login
+				if (!window.location.pathname.includes('/login')) {
+					window.location.href = '/login';
+				}
+			}
+		} catch (error) {
+			console.error('Auth check failed:', error);
+			// Redirect to login on error as well
+			if (!window.location.pathname.includes('/login')) {
+				window.location.href = '/login';
+			}
+		}
+	};
+
+	// Run check when page loads
+	checkAuth();
+</script>
+
+<style>
+	html,
+	body {
+		margin: 0;
+		width: 100svw;
+		height: 100svh;
+	}
+</style>
+

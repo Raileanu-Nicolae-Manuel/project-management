@@ -1,7 +1,6 @@
 import { createSignal, For } from "solid-js";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card";
 import AsyncButton from "./async-button";
-import { await1000 } from "@/api/fake";
 
 
 const CardDemo = () => {
@@ -15,9 +14,9 @@ const CardDemo = () => {
 				test
 			</CardContent>
 			<CardFooter>
-				<AsyncButton class="w-full" onClick={await1000}>
+				{/* <AsyncButton class="w-full">	
 					Time out button
-				</AsyncButton>
+				</AsyncButton> */}
 			</CardFooter>
 		</Card>
 	);

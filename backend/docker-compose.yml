@@ -1,4 +1,3 @@
-version: '3.8'
 services:
   mysql:
     image: mysql:8.0
@@ -8,7 +7,7 @@ services:
       MYSQL_USER: myapp
       MYSQL_PASSWORD: myapppassword
     ports:
-      - "3306:3306"
+      - "3309:3306"
     volumes:
       - mysql_data:/var/lib/mysql
 

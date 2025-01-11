@@ -1,9 +1,33 @@
-MYSQL_URL="mysql://myapp:myapppassword@tcp(localhost:3306)/myapp"
+.PHONY: migrate-up migrate-down db-create dev test build run sqlc-generate
 
-.PHONY: migrate-up migrate-down
+# Include environment variables from .env file
+include .env
+export
 
 migrate-up:
-	migrate -database ${MYSQL_URL} -path ./internal/db/migrations up
+	migrate -database "mysql://${DATABASE_URL}" -path ./internal/db/migrations up
 
 migrate-down:
-	migrate -database ${MYSQL_URL} -path ./internal/db/migrations down 
+	migrate -database "mysql://${DATABASE_URL}" -path ./internal/db/migrations down 
+
+db-create: 
+	docker-compose build; \
+	docker-compose up -d
+
+dev:
+	air main.go
+
+test:
+	go test -v ./...
+
+build:
+	go build -o backend main.go
+
+run:
+	./backend
+
+sqlc-generate:
+	sqlc generate
+
+
+

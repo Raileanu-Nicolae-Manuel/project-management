@@ -2,7 +2,7 @@ import { createSignal, type Component } from "solid-js"
 import { Button, type buttonProps } from "../ui/button"
 
 type AsyncButtonProps = {
-  onClick: string | (() => Promise<any>);
+  onClick: () => Promise<any>;
   children: any;
 } & Omit<buttonProps, 'onClick' | 'disabled'>;
 
@@ -10,13 +10,13 @@ const AsyncButton: Component<AsyncButtonProps> = (props) => {
   const [loading, setLoading] = createSignal(false)
   const fetchFunction = async (e: MouseEvent) => {
     e.preventDefault()
+    console.log(typeof props.onClick, Object.keys(props.onClick))
     setLoading(true)
     
-    const handler = typeof props.onClick === 'string' 
-      ? new Function('return ' + props.onClick)() 
-      : props.onClick;
-    console.log(handler, props.onClick)
-    await handler()
+    // const handler = typeof props.onClick === 'string' 
+    //   ? new Function('return ' + props.onClick)() 
+    //   : props.onClick;
+    console.log(await props.onClick())
     setLoading(false)
   }
   return (

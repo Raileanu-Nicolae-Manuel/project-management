@@ -20,6 +20,7 @@ type Querier interface {
 	GetProjectRoleByName(ctx context.Context, name string) (ProjectRole, error)
 	GetProjectUsers(ctx context.Context, projectID int64) ([]GetProjectUsersRow, error)
 	GetUser(ctx context.Context, id int64) (User, error)
+	GetUserByEmail(ctx context.Context, email string) (User, error)
 	GetUserProjects(ctx context.Context, userID int64) ([]GetUserProjectsRow, error)
 	ListProjectRoles(ctx context.Context) ([]ProjectRole, error)
 	ListProjects(ctx context.Context) ([]Project, error)

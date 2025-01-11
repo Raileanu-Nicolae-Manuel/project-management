@@ -1,0 +1,68 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "dev",
+            "type": "shell",
+            "command": "make",
+            "args": ["dev"],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "build",
+            "type": "shell",
+            "command": "make",
+            "args": ["build"],
+            "windows": {
+                "command": "mingw32-make",
+            },
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "test",
+            "type": "shell",
+            "command": "make test",
+            "group": "test",
+            "problemMatcher": []
+        },
+        {
+            "label": "db-create",
+            "type": "shell",
+            "command": "make db-create",
+            "problemMatcher": []
+        },
+        {
+            "label": "migrate-up",
+            "type": "shell",
+            "command": "make migrate-up",
+            "problemMatcher": []
+        },
+        {
+            "label": "migrate-down",
+            "type": "shell",
+            "command": "make migrate-down",
+            "problemMatcher": []
+        },
+        {
+            "label": "sqlc-generate",
+            "type": "shell",
+            "command": "make",
+            "args": ["sqlc-generate"],
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": []
+        }
+    ]
+} 

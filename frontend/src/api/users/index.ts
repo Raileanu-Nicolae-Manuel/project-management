@@ -1,10 +1,10 @@
 import type { User } from "@/types/users"
 import { RequestBuilder, type Transaction } from "../request"
 
-export default class Users {
+export default class UsersAPI {
     private readonly request: RequestBuilder
     constructor(private readonly path: string, private readonly headers: Headers) {
-        this.request = new RequestBuilder(path+"/users", headers)
+        this.request = new RequestBuilder(this.path+"/users", this.headers)
     }
 
     async getUsers(): Promise<User[]> {

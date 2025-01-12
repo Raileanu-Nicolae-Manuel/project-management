@@ -12,9 +12,10 @@ if (session?.accessToken) {
       Authorization: `Bearer ${session.accessToken}`,
       Accept: 'application/vnd.github.v3+json',
     },
-  });
+  }); 
   repositories = await response.json();
-  console.log(repositories.filter((repo: any) => repo.name === 'project-management'))
+}else{
+	return Astro.redirect('/login');
 }
 ---
 

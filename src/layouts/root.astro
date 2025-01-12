@@ -14,30 +14,7 @@
 </html>
 
 <script>
-	// Check if user is logged in
-	const checkAuth = async () => {
-		try {
-			const response = await fetch('/api/auth/check', {
-				credentials: 'include' // Important for cookies
-			});
-			
-			if (!response.ok) {
-				// If not logged in and not already on login page, redirect to login
-				if (!window.location.pathname.includes('/login')) {
-					window.location.href = '/login';
-				}
-			}
-		} catch (error) {
-			console.error('Auth check failed:', error);
-			// Redirect to login on error as well
-			if (!window.location.pathname.includes('/login')) {
-				window.location.href = '/login';
-			}
-		}
-	};
-
-	// Run check when page loads
-	checkAuth();
+	
 </script>
 
 <style>

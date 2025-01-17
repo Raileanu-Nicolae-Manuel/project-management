@@ -1,22 +1,17 @@
 ---
 import Layout from '@layouts/root.astro';
 import { getSession } from 'auth-astro/server';
+import { db } from 'astro:db';
 
 const session = await getSession(Astro.request);
 
-// Fetch repositories if user is authenticated
-let repositories = [];
-if (session?.accessToken) {
-  const response = await fetch('https://api.github.com/user/repos', {
-    headers: {
-      Authorization: `Bearer ${session.accessToken}`,
-      Accept: 'application/vnd.github.v3+json',
-    },
-  }); 
-  repositories = await response.json();
-}else{
-	return Astro.redirect('/login');
+if (!session) {
+  return Astro.redirect('/login');
 }
+
+// Fetch repositories from our API endpoint instead
+const response = await fetch(`${Astro.url.origin}/api/repositories`);
+const repositories = await response.json();
 ---
 
 <Layout>

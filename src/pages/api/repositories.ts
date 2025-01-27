@@ -5,8 +5,14 @@ export const GET: APIRoute = async ({ request }) => {
   const session = await getSession(request);
   
   if (!session?.accessToken) {
-    return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+    return new Response(JSON.stringify({ 
+      error: 'Unauthorized',
+      redirect: '/login'
+    }), {
       status: 401,
+      headers: {
+        'Content-Type': 'application/json'
+      }
     });
   }
 

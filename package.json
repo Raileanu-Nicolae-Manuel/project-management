@@ -1,47 +1,11 @@
 {
-  "name": "frontend",
+  "name": "project-management",
+  "module": "index.ts",
   "type": "module",
-  "version": "0.0.1",
-  "scripts": {
-    "dev": "astro dev",
-    "build": "astro build",
-    "preview": "astro preview",
-    "astro": "astro",
-    "db:generate": "drizzle-kit generate",
-    "db:push": "drizzle-kit push",
-    "db:studio": "drizzle-kit studio",
-    "db:migrate": "drizzle-kit migrate",
-    "db:check": "drizzle-kit check",
-    "db:up": "drizzle-kit up"
-  },
-  "dependencies": {
-    "@astrojs/db": "^0.14.5",
-    "@astrojs/node": "^9.0.0",
-    "@astrojs/solid-js": "^5.0.1",
-    "@astrojs/tailwind": "^5.1.4",
-    "@astrojs/ts-plugin": "^1.10.4",
-    "@auth/core": "^0.37.4",
-    "@kobalte/core": "^0.13.7",
-    "astro": "^5.1.2",
-    "auth-astro": "^4.2.0",
-    "class-variance-authority": "^0.7.1",
-    "clsx": "^2.1.1",
-    "dotenv": "^16.4.7",
-    "drizzle-orm": "^0.38.3",
-    "pg": "^8.13.1",
-    "solid-js": "^1.9.3",
-    "tailwind-merge": "^2.5.5",
-    "tailwindcss": "^3.4.16",
-    "tailwindcss-animate": "^1.0.7"
-  },
   "devDependencies": {
-    "@types/node": "^22.10.6",
-    "@types/pg": "^8.11.10",
-    "drizzle-kit": "^0.30.1",
-    "prettier": "^3.4.2",
-    "prettier-plugin-astro": "^0.14.1",
-    "prettier-plugin-tailwindcss": "^0.6.9",
-    "solid-devtools": "0.31.1",
-    "tsx": "^4.19.2"
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
   }
 }

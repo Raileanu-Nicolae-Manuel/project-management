@@ -1,0 +1,26 @@
+{
+	"folders": [
+		{
+			"name": "Config",
+			"path": "./"
+		},
+		
+		{
+			"name": "Admin-UI-Move",
+			"path": "../packages/migrate-to-admin-ui"
+		},
+		{
+			"name": "Admin-UI",
+			"path": "../packages/admin-ui"
+		},
+		{
+			"name": "Admin-API",
+			"path": "../packages/admin-api"
+		},
+		{
+			"name": "Root",
+			"path": "../"
+		}
+	],
+	"settings": {}
+}

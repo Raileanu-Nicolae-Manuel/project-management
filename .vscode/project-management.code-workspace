@@ -4,11 +4,6 @@
 			"name": "Config",
 			"path": "./"
 		},
-		
-		{
-			"name": "Admin-UI-Move",
-			"path": "../packages/migrate-to-admin-ui"
-		},
 		{
 			"name": "Admin-UI",
 			"path": "../packages/admin-ui"

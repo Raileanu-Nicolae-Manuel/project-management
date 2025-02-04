@@ -13,6 +13,10 @@
 			"path": "../packages/admin-api"
 		},
 		{
+			"name": "Executor",
+			"path": "../packages/executor"
+		},
+		{
 			"name": "Root",
 			"path": "../"
 		}
